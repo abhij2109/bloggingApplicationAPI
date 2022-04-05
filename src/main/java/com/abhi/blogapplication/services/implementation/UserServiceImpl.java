@@ -6,6 +6,7 @@ import com.abhi.blogapplication.repositories.UserRepository;
 import com.abhi.blogapplication.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class UserServiceImpl implements UserService {
@@ -21,24 +22,36 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDTO updateUser(UserDTO user, Integer userId) {
-
-        return null;
+    public UserDTO updateUser(UserDTO userDTO, Integer userId) {
+        User user=this.dtoToUser(userDTO);
+        User existingUser=userRepository.getById(userId);
+        existingUser.setUserName("XYZ");
+        existingUser.setUserEmail("xyz@gmail.com");
+        existingUser.setUserPassword("abc@21");
+        User saveUser=userRepository.save(existingUser);
+        return this.userToDto(saveUser);
     }
 
     @Override
     public UserDTO getUserById(Integer userId) {
-        return null;
+        User user=userRepository.getById(userId);
+        return this.userToDto(user);
     }
 
     @Override
     public List<UserDTO> getAllUsers() {
-        return null;
+        List<User> allUsers=userRepository.findAll();
+        ArrayList<UserDTO> all=new ArrayList<>();
+        for(User existing:allUsers)
+        {
+            all.add(this.userToDto(existing));
+        }
+        return all;
     }
 
     @Override
     public void deleteUser(Integer userId) {
-
+        this.userRepository.deleteById(userId);
     }
 
     private User dtoToUser(UserDTO userDTO){
