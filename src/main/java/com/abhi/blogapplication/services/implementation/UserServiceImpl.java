@@ -1,14 +1,17 @@
 package com.abhi.blogapplication.services.implementation;
 
 import com.abhi.blogapplication.dto.UserDTO;
+import com.abhi.blogapplication.exceptions.ResourceNotFoundException;
 import com.abhi.blogapplication.models.User;
 import com.abhi.blogapplication.repositories.UserRepository;
 import com.abhi.blogapplication.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Service
 public class UserServiceImpl implements UserService {
 
     @Autowired
@@ -16,34 +19,32 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO createUser(UserDTO userDTO) {
-        User user=this.dtoToUser(userDTO);
-        User savedUser=this.userRepository.save(user);
+        User user = this.dtoToUser(userDTO);
+        User savedUser = this.userRepository.save(user);
         return this.userToDto(savedUser);
     }
 
     @Override
     public UserDTO updateUser(UserDTO userDTO, Integer userId) {
-        User user=this.dtoToUser(userDTO);
-        User existingUser=userRepository.getById(userId);
-        existingUser.setUserName("XYZ");
-        existingUser.setUserEmail("xyz@gmail.com");
-        existingUser.setUserPassword("abc@21");
-        User saveUser=userRepository.save(existingUser);
-        return this.userToDto(saveUser);
+        User existingUser = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User", "Id", userId));
+        existingUser.setUserName(userDTO.getUserName());
+        existingUser.setUserEmail(userDTO.getUserEmail());
+        existingUser.setUserPassword(userDTO.getUserPassword());
+        User savedUser = userRepository.save(existingUser);
+        return this.userToDto(savedUser);
     }
 
     @Override
     public UserDTO getUserById(Integer userId) {
-        User user=userRepository.getById(userId);
-        return this.userToDto(user);
+        User existingUser = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User", "Id", userId));
+        return this.userToDto(existingUser);
     }
 
     @Override
     public List<UserDTO> getAllUsers() {
-        List<User> allUsers=userRepository.findAll();
-        ArrayList<UserDTO> all=new ArrayList<>();
-        for(User existing:allUsers)
-        {
+        List<User> allUsers = userRepository.findAll();
+        List<UserDTO> all = new ArrayList<>();
+        for (User existing : allUsers) {
             all.add(this.userToDto(existing));
         }
         return all;
@@ -51,11 +52,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUser(Integer userId) {
-        this.userRepository.deleteById(userId);
+        User existingUser = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User", "Id", userId));
+        this.userRepository.delete(existingUser);
     }
 
-    private User dtoToUser(UserDTO userDTO){
-        User user=new User();
+    private User dtoToUser(UserDTO userDTO) {
+        User user = new User();
         user.setId(userDTO.getId());
         user.setUserName(userDTO.getUserName());
         user.setUserEmail(userDTO.getUserEmail());
@@ -65,8 +67,8 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
-    private UserDTO userToDto(User user){
-        UserDTO userDTO=new UserDTO();
+    private UserDTO userToDto(User user) {
+        UserDTO userDTO = new UserDTO();
         userDTO.setId(user.getId());
         userDTO.setUserName(user.getUserName());
         userDTO.setUserEmail(user.getUserEmail());
