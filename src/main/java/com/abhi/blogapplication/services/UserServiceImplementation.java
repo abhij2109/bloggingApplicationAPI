@@ -42,6 +42,7 @@ public class UserServiceImplementation {
         return allUsers;
     }
 
+
     public void deleteUser(Integer userId) {
         User existingUser = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User", "Id", userId));
         this.userRepository.delete(existingUser);
