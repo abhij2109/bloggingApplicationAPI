@@ -7,6 +7,7 @@ import com.abhi.blogapplication.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -16,8 +17,7 @@ public class UserServiceImplementation {
     private UserRepository userRepository;
 
     public User createUser(User user) {
-        User savedUser = this.userRepository.save(user);
-        return savedUser;
+        return this.userRepository.save(user);
     }
 
 
@@ -26,20 +26,23 @@ public class UserServiceImplementation {
         existingUser.setUserName(user.getUserName());
         existingUser.setUserEmail(user.getUserEmail());
         existingUser.setUserPassword(user.getUserPassword());
-        User saveUser = userRepository.save(existingUser);
-        return saveUser;
+        return userRepository.save(existingUser);
     }
 
 
     public User getUserById(Integer userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User", "Id", userId));
+        ArrayList<String> al=userRepository.findDetailsFromId(userId);
+        String[] s =al.get(0).split(",");
+        System.out.println(s[0]);
+        System.out.println(s[1]);
+        System.out.println(s[2]);
         return user;
     }
 
 
     public List<User> getAllUsers() {
-        List<User> allUsers = userRepository.findAll();
-        return allUsers;
+        return userRepository.findAll();
     }
 
 
