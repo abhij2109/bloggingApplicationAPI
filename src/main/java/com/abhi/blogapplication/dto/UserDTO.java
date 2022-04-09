@@ -3,7 +3,7 @@ package com.abhi.blogapplication.dto;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.sql.Date;
+import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor
@@ -13,5 +13,5 @@ public class UserDTO {
     private String userEmail;
     private String userPassword;
     private String about;
-    private Date userCreated;
+    private LocalDate userCreated;
 }
