@@ -9,8 +9,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -52,12 +52,21 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserDTO> getAllUsers() {
+
         List<User> allUsers = userRepository.findAll();
-        List<UserDTO> all = new ArrayList<>();
-        for (User existing : allUsers) {
-            all.add(this.userToDto(existing));
-        }
-        return all;
+        List<UserDTO> getUsers = allUsers
+                                .stream()
+                                .map(this::userToDto)
+                                .collect(Collectors.toList());
+
+        /*  Efficient way of working below logic was with streams given above.
+
+            List<UserDTO> all = new ArrayList<>();
+            for (User existing : allUsers) {
+                all.add(this.userToDto(existing));
+            }
+        */
+        return getUsers;
     }
 
     @Override
@@ -70,10 +79,10 @@ public class UserServiceImpl implements UserService {
     }
 
     private User dtoToUser(UserDTO userDTO) {
-        return this.modelMapper.map(userDTO,User.class);
+        return this.modelMapper.map(userDTO, User.class);
     }
 
     private UserDTO userToDto(User user) {
-        return this.modelMapper.map(user,UserDTO.class);
+        return this.modelMapper.map(user, UserDTO.class);
     }
 }
