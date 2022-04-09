@@ -5,6 +5,7 @@ import com.abhi.blogapplication.exceptions.ResourceNotFoundException;
 import com.abhi.blogapplication.models.User;
 import com.abhi.blogapplication.repositories.UserRepository;
 import com.abhi.blogapplication.services.UserService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +17,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private ModelMapper modelMapper;
 
     @Override
     public UserDTO createUser(UserDTO userDTO) {
@@ -66,24 +70,10 @@ public class UserServiceImpl implements UserService {
     }
 
     private User dtoToUser(UserDTO userDTO) {
-        User user = new User();
-        user.setId(userDTO.getId());
-        user.setUserName(userDTO.getUserName());
-        user.setUserEmail(userDTO.getUserEmail());
-        user.setUserPassword(userDTO.getUserPassword());
-        user.setAbout(userDTO.getAbout());
-        user.setUserCreated(userDTO.getUserCreated());
-        return user;
+        return this.modelMapper.map(userDTO,User.class);
     }
 
     private UserDTO userToDto(User user) {
-        UserDTO userDTO = new UserDTO();
-        userDTO.setId(user.getId());
-        userDTO.setUserName(user.getUserName());
-        userDTO.setUserEmail(user.getUserEmail());
-        userDTO.setUserPassword(user.getUserPassword());
-        userDTO.setAbout(user.getAbout());
-        userDTO.setUserCreated(user.getUserCreated());
-        return userDTO;
+        return this.modelMapper.map(user,UserDTO.class);
     }
 }
