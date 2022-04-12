@@ -9,6 +9,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class CategoryServiceImpl implements CategoryService {
 
@@ -27,9 +28,10 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public CategoryDTO updateCategory(CategoryDTO dto, Integer id) {
-        Category cat=categoryRepository.findById(id).orElseThrow(
-                ()->new ResourceNotFoundException("User","Id",id)
-        );
+        Category cat=categoryRepository.findById(id)
+                .orElseThrow(
+                    ()->new ResourceNotFoundException("User","Id",id)
+                );
         cat.setCategoryTitle(dto.getCategoryTitle());
         cat.setDescription(dto.getDescription());
         Category updatedCategory=categoryRepository.save(cat);
@@ -38,16 +40,31 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public void deleteCategory(Integer id) {
-
+        Category saved=categoryRepository.findById(id)
+                .orElseThrow(
+                        ()->new ResourceNotFoundException("User","Id",id)
+                );
+        this.categoryRepository.delete(saved);
     }
 
     @Override
     public CategoryDTO getSingleCategory(Integer id) {
-        return null;
+        Category saved=categoryRepository.findById(id)
+                .orElseThrow(
+                        ()->new ResourceNotFoundException("User","Id",id)
+                );
+        return this.modelMapper.map(saved,CategoryDTO.class);
     }
 
     @Override
     public List<CategoryDTO> getCategories() {
-        return null;
+        List<Category> allCategories=categoryRepository.findAll();
+        List<CategoryDTO> categories=allCategories
+                                    .stream()
+                                    .map(
+                                        category->
+                                            this.modelMapper.map(category,CategoryDTO.class))
+                                    .collect(Collectors.toList());
+        return categories;
     }
 }
