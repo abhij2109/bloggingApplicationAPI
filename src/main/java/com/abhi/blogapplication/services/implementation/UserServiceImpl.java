@@ -58,14 +58,6 @@ public class UserServiceImpl implements UserService {
                                 .stream()
                                 .map(this::userToDto)
                                 .collect(Collectors.toList());
-
-        /*  Efficient way of working below logic was with streams given above.
-
-            List<UserDTO> all = new ArrayList<>();
-            for (User existing : allUsers) {
-                all.add(this.userToDto(existing));
-            }
-        */
         return getUsers;
     }
 

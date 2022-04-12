@@ -1,7 +1,6 @@
 package com.abhi.blogapplication.services;
 
 import com.abhi.blogapplication.dto.UserDTO;
-import com.abhi.blogapplication.models.User;
 
 import java.util.List;
 
