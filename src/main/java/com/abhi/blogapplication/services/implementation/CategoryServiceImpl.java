@@ -7,10 +7,12 @@ import com.abhi.blogapplication.repositories.CategoryRepository;
 import com.abhi.blogapplication.services.CategoryService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Service
 public class CategoryServiceImpl implements CategoryService {
 
     @Autowired
