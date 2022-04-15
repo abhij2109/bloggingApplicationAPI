@@ -3,8 +3,11 @@ package com.abhi.blogapplication.dto;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.*;
-import java.time.LocalDate;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import java.util.Date;
 
 @Data
 @NoArgsConstructor
@@ -21,5 +24,5 @@ public class UserDTO {
     private String userPassword;
     @NotNull
     private String about;
-    private LocalDate userCreated;
+    private Date userCreated;
 }

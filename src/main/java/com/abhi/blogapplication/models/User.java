@@ -4,7 +4,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.time.LocalDate;
+import java.util.Date;
 
 @Entity
 @Table(name = "users")
@@ -28,5 +28,5 @@ public class User {
 
     private String about;
 
-    private LocalDate userCreated;
+    private Date userCreated;
 }
