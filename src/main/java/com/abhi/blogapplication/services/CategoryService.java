@@ -15,4 +15,5 @@ public interface CategoryService {
     CategoryDTO getSingleCategory(Integer id);
 
     List<CategoryDTO> getCategories();
+
 }
