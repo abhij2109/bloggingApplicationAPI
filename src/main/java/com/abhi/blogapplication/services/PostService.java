@@ -9,17 +9,17 @@ public interface PostService {
 
     PostDTO createPost(PostDTO dto, Integer userId, Integer catId);
 
-    PostDTO updatePost(PostDTO dto,Integer id);
+    PostDTO updatePost(PostDTO dto, Integer userId, Integer catId, Integer postId);
 
-    Post getPostById(Integer id);
+    PostDTO getPostById(Integer id);
 
-    List<Post> getAllPost();
+    List<PostDTO> getAllPost();
 
-    void deletePost(Integer id);
+    void deletePost(Integer postId);
 
-    List<Post> getPostsByCategory(Integer categoryId);
+    List<PostDTO> getPostsByCategory(Integer categoryId);
 
-    List<Post> getPostsByUser(Integer userId);
+    List<PostDTO> getPostsByUser(Integer userId);
 
     List<Post> searchPosts(String keyword);
 
