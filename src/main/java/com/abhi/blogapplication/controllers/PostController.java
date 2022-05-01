@@ -21,9 +21,8 @@ public class PostController {
     @PostMapping("/user/{userId}/category/{categoryId}/post/")
     public ResponseEntity<PostDTO> createPost(@RequestBody PostDTO postDTO,
                                               @PathVariable Integer userId,
-                                              @PathVariable Integer categoryId)
-    {
-        PostDTO createdPost=postService.createPost(postDTO,userId,categoryId);
+                                              @PathVariable Integer categoryId) {
+        PostDTO createdPost = postService.createPost(postDTO, userId, categoryId);
         return new ResponseEntity<PostDTO>(createdPost, HttpStatus.CREATED);
     }
 
@@ -31,41 +30,42 @@ public class PostController {
     public ResponseEntity<PostDTO> updatePost(@RequestBody PostDTO postDTO,
                                               @PathVariable Integer userId,
                                               @PathVariable Integer categoryId,
-                                              @PathVariable Integer postId)
-    {
-        PostDTO updatedPost=postService.updatePost(postDTO,userId,categoryId,postId);
-        return new ResponseEntity<PostDTO>(updatedPost,HttpStatus.ACCEPTED);
+                                              @PathVariable Integer postId) {
+        PostDTO updatedPost = postService.updatePost(postDTO, userId, categoryId, postId);
+        return new ResponseEntity<PostDTO>(updatedPost, HttpStatus.ACCEPTED);
     }
 
     @GetMapping("/user/{userId}/posts")
-    public ResponseEntity<List<PostDTO>> getPostsByUser(@PathVariable Integer userId){
-        List<PostDTO> allPosts=postService.getPostsByUser(userId);
-        return new ResponseEntity<List<PostDTO>>(allPosts,HttpStatus.OK);
+    public ResponseEntity<List<PostDTO>> getPostsByUser(@PathVariable Integer userId) {
+        List<PostDTO> allPosts = postService.getPostsByUser(userId);
+        return new ResponseEntity<List<PostDTO>>(allPosts, HttpStatus.OK);
     }
 
     @GetMapping("/category/{categoryId}/posts")
-    public ResponseEntity<List<PostDTO>> getPostsByCategory(@PathVariable Integer categoryId){
-        List<PostDTO> allPosts=postService.getPostsByCategory(categoryId);
-        return new ResponseEntity<List<PostDTO>>(allPosts,HttpStatus.OK);
+    public ResponseEntity<List<PostDTO>> getPostsByCategory(@PathVariable Integer categoryId) {
+        List<PostDTO> allPosts = postService.getPostsByCategory(categoryId);
+        return new ResponseEntity<List<PostDTO>>(allPosts, HttpStatus.OK);
     }
 
     @GetMapping("/posts")
-    public ResponseEntity<List<PostDTO>> getAllPosts()
+    public ResponseEntity<List<PostDTO>> getAllPosts(
+            @RequestParam(value = "pageNumber", defaultValue = "0", required = false) Integer pageNumber,
+            @RequestParam(value = "pageSize", defaultValue = "5", required = false) Integer pageSize
+    )
     {
-        List<PostDTO> allPost = postService.getAllPost();
-        return new ResponseEntity<List<PostDTO>>(allPost,HttpStatus.OK);
+        List<PostDTO> allPost = postService.getAllPost(pageNumber, pageSize);
+        return new ResponseEntity<List<PostDTO>>(allPost, HttpStatus.OK);
     }
 
     @GetMapping("/posts/{postId}")
-    public ResponseEntity<PostDTO> getPostById(@PathVariable Integer postId)
-    {
-        PostDTO postDTO=postService.getPostById(postId);
+    public ResponseEntity<PostDTO> getPostById(@PathVariable Integer postId) {
+        PostDTO postDTO = postService.getPostById(postId);
         return new ResponseEntity<PostDTO>(postDTO, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/posts/{postId}")
-    public ApiResponse deletePost(@PathVariable Integer postId){
+    public ApiResponse deletePost(@PathVariable Integer postId) {
         postService.deletePost(postId);
-        return new ApiResponse("Post successfully deleted.!!",true);
+        return new ApiResponse("Post successfully deleted.!!", true);
     }
 }
