@@ -1,6 +1,7 @@
 package com.abhi.blogapplication.services.implementation;
 
 import com.abhi.blogapplication.dto.PostDTO;
+import com.abhi.blogapplication.dto.PostResponse;
 import com.abhi.blogapplication.exceptions.ResourceNotFoundException;
 import com.abhi.blogapplication.models.Category;
 import com.abhi.blogapplication.models.Post;
@@ -95,7 +96,7 @@ public class PostServiceImpl implements PostService {
 
 
     @Override
-    public List<PostDTO> getAllPost(Integer pageNumber, Integer pageSize) {
+    public PostResponse getAllPost(Integer pageNumber, Integer pageSize) {
 
         Pageable p= PageRequest.of(pageNumber,pageSize);
 
@@ -107,7 +108,16 @@ public class PostServiceImpl implements PostService {
                 .map(
                         (post) -> modelMapper.map(post, PostDTO.class)
                 ).collect(Collectors.toList());
-        return postsDTO;
+
+        PostResponse postResponse=new PostResponse();
+        postResponse.setContent(postsDTO);
+        postResponse.setPageNumber(pagePost.getNumber());
+        postResponse.setPageSize(pagePost.getSize());
+        postResponse.setTotalElements(pagePost.getNumberOfElements());
+        postResponse.setTotalPages(pagePost.getTotalPages());
+        postResponse.setLastPage(pagePost.isLast());
+
+        return postResponse;
     }
 
 

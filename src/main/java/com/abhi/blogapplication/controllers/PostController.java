@@ -2,6 +2,7 @@ package com.abhi.blogapplication.controllers;
 
 import com.abhi.blogapplication.dto.ApiResponse;
 import com.abhi.blogapplication.dto.PostDTO;
+import com.abhi.blogapplication.dto.PostResponse;
 import com.abhi.blogapplication.services.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -48,13 +49,13 @@ public class PostController {
     }
 
     @GetMapping("/posts")
-    public ResponseEntity<List<PostDTO>> getAllPosts(
+    public ResponseEntity<PostResponse> getAllPosts(
             @RequestParam(value = "pageNumber", defaultValue = "0", required = false) Integer pageNumber,
             @RequestParam(value = "pageSize", defaultValue = "5", required = false) Integer pageSize
     )
     {
-        List<PostDTO> allPost = postService.getAllPost(pageNumber, pageSize);
-        return new ResponseEntity<List<PostDTO>>(allPost, HttpStatus.OK);
+        PostResponse postResponse = postService.getAllPost(pageNumber, pageSize);
+        return new ResponseEntity<PostResponse>(postResponse, HttpStatus.OK);
     }
 
     @GetMapping("/posts/{postId}")
