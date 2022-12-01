@@ -2,11 +2,13 @@ package com.abhi.blogapplication.controllers;
 
 import com.abhi.blogapplication.dto.JwtAuthRequest;
 import com.abhi.blogapplication.dto.JwtAuthResponse;
+import com.abhi.blogapplication.exceptions.ApiException;
 import com.abhi.blogapplication.security.JwtTokenHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -31,8 +33,8 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<JwtAuthResponse> createToken(@RequestBody JwtAuthRequest jwtAuthRequest){
 
-        this.authenticate(jwtAuthRequest.getUserName(), jwtAuthRequest.getPassWord());
-        UserDetails userDetails = this.userDetailsService.loadUserByUsername(jwtAuthRequest.getUserName());
+        this.authenticate(jwtAuthRequest.getUserEmail(), jwtAuthRequest.getUserPassword());
+        UserDetails userDetails = this.userDetailsService.loadUserByUsername(jwtAuthRequest.getUserEmail());
 
         String token = this.jwtTokenHelper.generateToken(userDetails);
 
@@ -43,7 +45,13 @@ public class AuthController {
 
     private void authenticate(String userName, String passWord) {
         UsernamePasswordAuthenticationToken authenticationToken=new UsernamePasswordAuthenticationToken(userName, passWord);
-        this.authenticationManager.authenticate(authenticationToken);
+        try {
+            authenticationManager.authenticate(authenticationToken);
+        }
+        catch (BadCredentialsException bce){
+            System.out.println("Invalid Details!!");
+            throw new ApiException("Invalid Username or Password.");
+        }
     }
 
 }
