@@ -2,11 +2,14 @@ package com.abhi.blogapplication.services.implementation;
 
 import com.abhi.blogapplication.dto.UserDTO;
 import com.abhi.blogapplication.exceptions.ResourceNotFoundException;
+import com.abhi.blogapplication.models.Role;
 import com.abhi.blogapplication.models.User;
+import com.abhi.blogapplication.repositories.RoleRepository;
 import com.abhi.blogapplication.repositories.UserRepository;
 import com.abhi.blogapplication.services.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -20,7 +23,25 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
 
     @Autowired
+    private RoleRepository roleRepository;
+
+    @Autowired
     private ModelMapper modelMapper;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Override
+    public UserDTO registerUser(UserDTO userDTO) {
+        User user=modelMapper.map(userDTO, User.class);
+        //encoded the password.
+        user.setUserPassword(passwordEncoder.encode(user.getUserPassword()));
+        // roles
+        Role role=roleRepository.findById(502).get();
+        user.getRoles().add(role);
+        User newUser=userRepository.save(user);
+        return modelMapper.map(newUser, UserDTO.class);
+    }
 
     @Override
     public UserDTO createUser(UserDTO userDTO) {
