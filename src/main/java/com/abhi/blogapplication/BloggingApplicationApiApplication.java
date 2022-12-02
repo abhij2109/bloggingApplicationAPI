@@ -33,7 +33,7 @@ public class BloggingApplicationApiApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        System.out.println(passwordEncoder.encode("Ajain@006"));
+        passwordEncoder.encode("Suresh@123");
 
         Role role=new Role();
         role.setId(501);
